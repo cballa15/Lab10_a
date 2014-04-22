@@ -49,7 +49,45 @@ public class Board {
                 isAWinner = true;
             }
         }
-        //put in code for diagonals
+        // check diagonals
+        // check \
+        if (!isAWinner) {
+            for (int col = 0; col < 3 && consecutive != 3; col++) {
+                consecutive = 0;
+                for (int row = 0; row < col + 1; row++) {
+                    if (board[row][row] == marker) {
+                        consecutive++;
+                    }
+                }
+            }
+        }
+        if (consecutive == 3) {
+            isAWinner = true;
+        }
+        // end \
+        // check /
+        if (!isAWinner) {
+            for (int col = 0; col < 3 && consecutive != 3; col++) {
+                consecutive = 0;
+                for (int row = 0; row < col; row++) {
+                    if (board[0][2] == marker) {
+                        consecutive++;
+                    }
+                    if (board[1][1] == marker) {
+                        consecutive++;
+                    }
+                    if (board[2][0] == marker) {
+                        consecutive++;
+                    }
+                }
+            }
+        }
+        if (consecutive == 3) {
+            isAWinner = true;
+        }
+        //end /
+
+        // end diagonal check
 
         return isAWinner;
     }
@@ -65,7 +103,7 @@ public class Board {
         int row;
         int col;
 
-        // Checks the horizontal
+        // check for vertical
         consecutive = 0;
         for (row = 0; row < 3 && consecutive != 3; row++) {
             consecutive = 0;
@@ -78,9 +116,9 @@ public class Board {
         if (consecutive == 3) {
             isAWinner = true;
         }
-        // end horizontal check
+        // end check vertical
 
-        // Checks the vertical
+        // check horizontal
         if (!isAWinner) {
             for (col = 0; col < 3 && consecutive != 3; col++) {
                 consecutive = 0;
@@ -93,17 +131,16 @@ public class Board {
         }
         if (consecutive == 3) {
             isAWinner = true;
-
         }
-        // end vertical check
+        // end horizontal check
 
-        //put in code for diagonals
+
+        // check diagonals
+        // check \
         if (!isAWinner) {
-            System.out.println("diagoal check: " + gameBoard[1][1]);
-            System.out.println("consecutive check: " + consecutive);
-            for (row = 0; row < 3 && consecutive != 3; row++) {
+            for (col = 0; col < 3 && consecutive != 3; col++) {
                 consecutive = 0;
-                for (col = 0; col < 3; col++) {
+                for (row = 0; row < col + 1; row++) {
                     if (gameBoard[row][row] == marker) {
                         consecutive++;
                     }
@@ -112,10 +149,32 @@ public class Board {
         }
         if (consecutive == 3) {
             isAWinner = true;
-
         }
-        // end diagonal check
+        // end \
+        // check /
+        if (!isAWinner) {
+            for (col = 0; col < 3 && consecutive != 3; col++) {
+                consecutive = 0;
+                for (row = 0; row < col; row++) {
+                    if (gameBoard[0][2] == marker) {
+                        consecutive++;
+                    }
+                    if (gameBoard[1][1] == marker) {
+                        consecutive++;
+                    }
+                    if (gameBoard[2][0] == marker) {
+                        consecutive++;
+                    }
+                }
+            }
+        }
+        if (consecutive == 3) {
+            isAWinner = true;
+        }
+        //end /
 
+        // end diagonal check
+        //put in code for diagonals
         return isAWinner;
     }
 
@@ -125,6 +184,7 @@ public class Board {
      */
     public void computerMove(char marker) {
         boolean canComputerWin = false;
+        boolean canHumanWin = false;
         char[][] copyBoard;
         int row;
         int col;
@@ -142,7 +202,7 @@ public class Board {
                 }
             }
         }
-
+        // check for a win in a col
         if (!canComputerWin) {
             for (col = 0; col < 3 && !canComputerWin; col++) {
 
@@ -155,8 +215,34 @@ public class Board {
                 }
             }
         }
+        ////////////////////////////////////////////////////////////////////////
+        //check for a win in a row
+        for (row = 0; row < 3 && !canHumanWin; row++) {
+            for (col = 0; col < 3 && !canHumanWin; col++) {
+                if (gameBoard[row][col] == ' ') {
+                    copyBoard = copyTheBoard();
+                    copyBoard[row][col] = marker;
+                    canHumanWin = checkForWin(marker, copyBoard);
+                }
+            }
+        }
+        // check for a win in a col
+        if (!canHumanWin) {
+            for (col = 0; col < 3 && !canHumanWin; col++) {
 
+                for (row = 0; row < 3 && !canHumanWin; row++) {
+                    if (gameBoard[row][col] == ' ') {
+                        copyBoard = copyTheBoard();
+                        copyBoard[row][col] = marker;
+                        canHumanWin = checkForWin(marker, copyBoard);
+                    }
+                }
+            }
+        }
+        ////////////////////////////////////////////////////////////////////////
         if (canComputerWin) {
+            gameBoard[row - 1][col - 1] = marker;
+        } else if (canHumanWin) {
             gameBoard[row - 1][col - 1] = marker;
         } else {
             boolean placed = false;
